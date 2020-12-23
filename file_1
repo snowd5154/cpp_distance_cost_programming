@@ -1,0 +1,71 @@
+/c++ program
+
+#include <iostream>
+#include<cmath>
+
+using namespace std;
+//function prototype declaration
+double compute_lengths(double& riverWidth, double& factoryDistance, double costUnderWater, double costOverLand);
+int main()
+{
+double riverWidth, factoryDistance, costUnderWater;
+double costOverLand, construction_cost;
+//display message
+cout << "\n\tThe following will determine the minimal cost of the line from\n\t\t the power plant to the end destination:\n\n";
+cout << "---------------------------------------------------------------------------\n\n";
+//Width of the river
+cout << "\n\nEnter the width of the river (in miles): ";
+cin >> riverWidth;
+cout << endl << endl;
+//Distance to the factory
+cout << "Enter the distance to the factory in miles: ";
+cin >> factoryDistance;
+cout << endl << endl;
+//Power line over land
+cout << "Enter cost of laying the power line over land (per foot): $";
+cin >> costOverLand;
+cout << "\n\n";
+//Power line over water
+cout << "Enter cost of laying the power line over Water (per foot): $";
+cin >> costUnderWater;
+cout << "\n\n";
+//Call function to compute cost of construction
+construction_cost = compute_lengths(riverWidth, factoryDistance, costUnderWater, costOverLand);
+//display output
+cout << "Length of power line under water is : " << riverWidth << " miles. " << endl << endl;
+cout << "Length of power line over land is: " << factoryDistance << " miles." << endl << endl;
+cout << "Minimum total cost of laying the power line is: $" << construction_cost << endl << endl;
+cout << "-----------------------------------------------------------------------------\n\n";
+system("pause");
+return 0;
+}
+
+//function definition to compute construction cost
+double compute_lengths(double& riverWidth, double& factoryDistance, double costUnderWater, double costOverLand) {
+double minWidth = 0, minDistance = 0;
+double i = 0.0, width, tempCost, minCost;
+//calculate the cost for laying the power line underwater and over the land with given lengths
+minCost = 5280 * ((riverWidth * costUnderWater) + (factoryDistance * costOverLand));
+//loop till the point of turn reaches the factory
+do {
+    //calculate the width of the river by moving the point of turn toward the factory
+   width = sqrt((riverWidth * riverWidth) + (i * i));
+//find the cost with new dimensions
+//multiply with 5280 to convert miles into foot
+   tempCost = 5280 * (width * costUnderWater + (factoryDistance - i) * costOverLand);
+//if cost is less than existing minimum cost
+//change minimum values of width and distance
+if (minCost > tempCost)
+{
+minWidth = width;
+minDistance = factoryDistance - i;
+minCost = tempCost;
+}
+i += 0.1;
+//condition to terminate if the point of turn
+//reaches the point of factory location
+} while (i < factoryDistance);
+riverWidth = minWidth;
+factoryDistance = minDistance;
+return minCost;
+}
